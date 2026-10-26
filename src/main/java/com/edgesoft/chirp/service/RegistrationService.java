@@ -5,6 +5,7 @@ import com.edgesoft.chirp.dto.RegisterResponse;
 import com.edgesoft.chirp.entity.User;
 import com.edgesoft.chirp.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.UUID;
@@ -13,7 +14,9 @@ import java.util.UUID;
 public class RegistrationService {
 
     @Autowired
-    UserRepository userRepository;
+    private UserRepository userRepository;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     public RegisterResponse register(RegisterRequest registerRequest){
         /*
@@ -25,7 +28,7 @@ public class RegistrationService {
         User user = User.builder()
                 .userId(UUID.randomUUID())
                 .email(registerRequest.email())
-                .password(registerRequest.password())
+                .password(passwordEncoder.encode(registerRequest.password()))
                 .firstName(registerRequest.firstName())
                         .build();
         System.out.println(user);
@@ -33,6 +36,6 @@ public class RegistrationService {
 
 
 
-        return new RegisterResponse("","","");
+        return new RegisterResponse(user.getFirstName(),user.getLastName(),user.getEmail());
     }
 }
