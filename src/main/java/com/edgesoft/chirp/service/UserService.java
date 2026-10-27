@@ -5,24 +5,29 @@ import com.edgesoft.chirp.dto.RegisterResponse;
 import com.edgesoft.chirp.entity.User;
 import com.edgesoft.chirp.repository.UserRepository;
 import lombok.extern.slf4j.Slf4j;
+import org.jspecify.annotations.Nullable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
 import java.util.UUID;
 
 @Slf4j
 @Service
-public class RegistrationService {
+public class UserService {
 
     @Autowired
     private UserRepository userRepository;
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-//    public User getUser() {
-//
-//    }
+    public User getUserByEmail(String email) {
+        log.info("Getting the user by email: " + email);
+        Optional<User> user = userRepository.findByEmail(email);
+        log.info("found the user " + user.get().getFirstName());
+        return user.get();
+    }
 
     public RegisterResponse register(RegisterRequest registerRequest) {
         /*
@@ -38,10 +43,17 @@ public class RegistrationService {
                 .firstName(registerRequest.firstName())
                 .build();
 
-        userRepository.saveAndFlush(user);
+        User savedUser = userRepository.saveAndFlush(user);
+        log.info("Registered a new user " + savedUser.getFirstName());
+        return new RegisterResponse(savedUser.getFirstName(), savedUser.getLastName(), savedUser.getEmail());
 
-        return new RegisterResponse(user.getFirstName(), user.getLastName(), user.getEmail());
 
+    }
 
+    public @Nullable User getUserById(UUID id) {
+        log.info("Finding a user by id: " + id);
+        Optional<User> user = userRepository.findById(id);
+        log.info("Found a user by id " + user.get().getFirstName());
+        return user.get();
     }
 }
