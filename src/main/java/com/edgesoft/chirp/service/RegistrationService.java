@@ -4,12 +4,14 @@ import com.edgesoft.chirp.dto.RegisterRequest;
 import com.edgesoft.chirp.dto.RegisterResponse;
 import com.edgesoft.chirp.entity.User;
 import com.edgesoft.chirp.repository.UserRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.UUID;
 
+@Slf4j
 @Service
 public class RegistrationService {
 
@@ -18,7 +20,11 @@ public class RegistrationService {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    public RegisterResponse register(RegisterRequest registerRequest){
+//    public User getUser() {
+//
+//    }
+
+    public RegisterResponse register(RegisterRequest registerRequest) {
         /*
         1. field validations, SKIP for now
         2. existing user,
@@ -30,12 +36,12 @@ public class RegistrationService {
                 .email(registerRequest.email())
                 .password(passwordEncoder.encode(registerRequest.password()))
                 .firstName(registerRequest.firstName())
-                        .build();
-        System.out.println(user);
-        userRepository.save(user);
+                .build();
+
+        userRepository.saveAndFlush(user);
+
+        return new RegisterResponse(user.getFirstName(), user.getLastName(), user.getEmail());
 
 
-
-        return new RegisterResponse(user.getFirstName(),user.getLastName(),user.getEmail());
     }
 }

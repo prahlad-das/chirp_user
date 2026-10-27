@@ -10,7 +10,11 @@ import java.util.Date;
 import java.util.UUID;
 
 @Entity
-@Table(name="users")
+@Table(
+        name="users",
+        indexes = {
+        @Index(name = "idx_user_email", columnList = "email", unique = true)}
+)
 @Data
 @Builder
 @NoArgsConstructor
