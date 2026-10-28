@@ -3,7 +3,7 @@ package com.edgesoft.chirp.controller;
 
 import com.edgesoft.chirp.dto.RegisterRequest;
 import com.edgesoft.chirp.dto.RegisterResponse;
-import com.edgesoft.chirp.entity.User;
+import com.edgesoft.chirp.dto.UserResponse;
 import com.edgesoft.chirp.service.UserService;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
@@ -23,12 +23,12 @@ public class UserController {
     UserService userService;
 
     @GetMapping("/email")
-    public ResponseEntity<User> getUserByEmail(@RequestParam("email") String emailId){
+    public ResponseEntity<UserResponse> getUserByEmail(@RequestParam("email") String emailId){
         return ResponseEntity.status(HttpStatus.OK).body(userService.getUserByEmail(emailId));
     }
 
     @GetMapping("/id")
-    public ResponseEntity<User> getUserById(@RequestParam("uuid") UUID uuid){
+    public ResponseEntity<UserResponse> getUserById(@RequestParam("uuid") UUID uuid){
         return ResponseEntity.status(HttpStatus.OK).body(userService.getUserById(uuid));
     }
 

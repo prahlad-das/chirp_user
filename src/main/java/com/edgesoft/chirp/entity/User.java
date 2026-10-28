@@ -20,7 +20,7 @@ import java.util.UUID;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class User implements Serializable {
+public class User {
 
 //    userId as the primary key, username, bio, creation timestamp,
 //    and optionally denormalized counts for followers and following

@@ -2,6 +2,7 @@ package com.edgesoft.chirp.service;
 
 import com.edgesoft.chirp.dto.RegisterRequest;
 import com.edgesoft.chirp.dto.RegisterResponse;
+import com.edgesoft.chirp.dto.UserResponse;
 import com.edgesoft.chirp.entity.User;
 import com.edgesoft.chirp.repository.UserRepository;
 import lombok.extern.slf4j.Slf4j;
@@ -24,11 +25,11 @@ public class UserService {
     private PasswordEncoder passwordEncoder;
 
     @Cacheable(value="users-email", key="#email")
-    public User getUserByEmail(String email) {
+    public @Nullable UserResponse getUserByEmail(String email) {
         log.info("Getting the user by email: " + email);
-        Optional<User> user = userRepository.findByEmail(email);
-        log.info("found the user " + user.get().getFirstName());
-        return user.get();
+        Optional<UserResponse> userResponse = userRepository.findByEmail(email).map(UserResponse::new);
+        log.info("found the user " + userResponse.get().getFirstName());
+        return userResponse.get();
     }
 
     public RegisterResponse register(RegisterRequest registerRequest) {
@@ -53,10 +54,10 @@ public class UserService {
     }
 
     @Cacheable(value="users", key="#id")
-    public @Nullable User getUserById(UUID id) {
+    public @Nullable UserResponse getUserById(UUID id) {
         log.info("Finding a user by id: " + id);
-        Optional<User> user = userRepository.findById(id);
-        log.info("Found a user by id " + user.get().getFirstName());
-        return user.get();
+        Optional<UserResponse> userResponse = userRepository.findById(id).map(UserResponse::new);
+        log.info("Found a user by id " + userResponse.get().getFirstName());
+        return userResponse.get();
     }
 }
