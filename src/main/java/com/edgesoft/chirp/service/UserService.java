@@ -12,7 +12,8 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
+import java.util.Locale;
+import java.util.NoSuchElementException;
 import java.util.UUID;
 
 @Slf4j
@@ -26,10 +27,15 @@ public class UserService {
 
     @Cacheable(value="users-email", key="#email")
     public @Nullable UserResponse getUserByEmail(String email) {
-        log.info("Getting the user by email: " + email);
-        Optional<UserResponse> userResponse = userRepository.findByEmail(email).map(UserResponse::new);
-        log.info("found the user " + userResponse.get().getFirstName());
-        return userResponse.get();
+        String sanitizedEmail = email.strip().toLowerCase(Locale.ROOT);
+        log.info("Getting the user by email: {}", sanitizedEmail);
+        return userRepository.findByEmail(sanitizedEmail)
+                .map(user -> {
+                    log.info("Found the user: {}", user.getFirstName());
+                    return new UserResponse(user);
+                }).orElseThrow(
+                        () -> new NoSuchElementException("User not found with email: {}" + sanitizedEmail)
+                );
     }
 
     public RegisterResponse register(RegisterRequest registerRequest) {
@@ -47,17 +53,22 @@ public class UserService {
                 .build();
 
         User savedUser = userRepository.saveAndFlush(user);
-        log.info("Registered a new user " + savedUser.getFirstName());
-        return new RegisterResponse(savedUser.getFirstName(), savedUser.getLastName(), savedUser.getEmail());
+        log.info("Registered a new user {}", savedUser.getFirstName());
+        return new RegisterResponse(savedUser);
 
 
     }
 
     @Cacheable(value="users", key="#id")
     public @Nullable UserResponse getUserById(UUID id) {
-        log.info("Finding a user by id: " + id);
-        Optional<UserResponse> userResponse = userRepository.findById(id).map(UserResponse::new);
-        log.info("Found a user by id " + userResponse.get().getFirstName());
-        return userResponse.get();
+        log.info("Finding a user by id: {}", id);
+        return userRepository.findById(id).map(
+                user -> {
+                    log.info("User found with uuid: {}", id);
+                    return new UserResponse(user);
+                }
+        ).orElseThrow(
+                () -> new NoSuchElementException("No user found with id " + id)
+        );
     }
 }

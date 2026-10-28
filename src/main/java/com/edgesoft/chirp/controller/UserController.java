@@ -24,12 +24,12 @@ public class UserController {
 
     @GetMapping("/email")
     public ResponseEntity<UserResponse> getUserByEmail(@RequestParam("email") String emailId){
-        return ResponseEntity.status(HttpStatus.OK).body(userService.getUserByEmail(emailId));
+        return ResponseEntity.ok(userService.getUserByEmail(emailId));
     }
 
     @GetMapping("/id")
     public ResponseEntity<UserResponse> getUserById(@RequestParam("uuid") UUID uuid){
-        return ResponseEntity.status(HttpStatus.OK).body(userService.getUserById(uuid));
+        return ResponseEntity.ok(userService.getUserById(uuid));
     }
 
     // User registration
@@ -37,7 +37,7 @@ public class UserController {
     public ResponseEntity<RegisterResponse> registerUser(@RequestBody @Valid RegisterRequest registerRequest){
         //field validations, existing user, encryption, persistent storage
         log.info("User registration is in progress");
-        return ResponseEntity.status(HttpStatus.OK).body(userService.register(registerRequest));
+        return ResponseEntity.ok(userService.register(registerRequest));
 
     }
 
