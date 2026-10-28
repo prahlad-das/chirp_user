@@ -7,6 +7,7 @@ import com.edgesoft.chirp.repository.UserRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.jspecify.annotations.Nullable;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -22,6 +23,7 @@ public class UserService {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+    @Cacheable(value="users-email", key="#email")
     public User getUserByEmail(String email) {
         log.info("Getting the user by email: " + email);
         Optional<User> user = userRepository.findByEmail(email);
@@ -50,6 +52,7 @@ public class UserService {
 
     }
 
+    @Cacheable(value="users", key="#id")
     public @Nullable User getUserById(UUID id) {
         log.info("Finding a user by id: " + id);
         Optional<User> user = userRepository.findById(id);
