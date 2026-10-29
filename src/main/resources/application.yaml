@@ -12,3 +12,7 @@ spring:
     show-sql: true
   application:
     name: chirp
+app:
+  security:
+    api-key-header: X-API-KEY
+    api-key: "your-super-secure-secret-api-key-here"
