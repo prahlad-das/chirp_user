@@ -7,11 +7,16 @@ option java_package = "com.edgesoft.chirp.proto";
 option java_outer_classname = "UserServiceProto";
 
 service UserService {
-  rpc GetUser(UserRequest) returns (UserReply) {}
+  rpc GetUserByEmail(UserEmail) returns (UserReply) {}
+  rpc GetUserById(UserId) returns (UserReply) {}
 }
 
-message UserRequest {
-  string id = 1;
+message UserEmail {
+  string email = 1;
+}
+
+message UserId {
+  string uuid = 1;
 }
 
 message UserReply {
@@ -27,17 +32,3 @@ message UserReply {
   string email = 10;
 
 }
-
-
-//    private UUID userId;
-//
-//    private String firstName;
-//    private String lastName;
-//    private String bio;
-//    private String location;
-//    private Date createdAt;
-//    private Date date_of_birth;
-//    private int followers = 0;
-//    private int following = 0;
-//
-//    private String email;

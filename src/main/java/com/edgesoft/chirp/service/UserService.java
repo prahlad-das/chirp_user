@@ -4,8 +4,6 @@ import com.edgesoft.chirp.dto.RegisterRequest;
 import com.edgesoft.chirp.dto.RegisterResponse;
 import com.edgesoft.chirp.dto.UserResponse;
 import com.edgesoft.chirp.entity.User;
-import com.edgesoft.chirp.proto.UserReply;
-import com.edgesoft.chirp.proto.UserRequest;
 import com.edgesoft.chirp.repository.UserRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.jspecify.annotations.Nullable;
@@ -70,16 +68,4 @@ public class UserService {
                         () -> new NoSuchElementException("No user found with id " + id));
     }
 
-    @Cacheable(value = "grpc-users", key = "#email")
-    public UserResponse getUser(String email) {
-        String sanitizedEmail = email.strip().toLowerCase(Locale.ROOT);
-        log.info("Getting the user by email: {}", sanitizedEmail);
-        return userRepository.findByEmail(sanitizedEmail)
-                .map(user -> {
-                    log.info("Found the user: {}", user.getFirstName());
-                    return new UserResponse(user);
-                }).orElseThrow(
-                        () -> new NoSuchElementException("User not found with email: {}" + sanitizedEmail));
-
-    }
 }
