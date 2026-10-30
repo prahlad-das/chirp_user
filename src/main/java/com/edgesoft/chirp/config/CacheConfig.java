@@ -23,8 +23,10 @@ public class CacheConfig {
                 .entryTtl(Duration.ofMinutes(5))
                 .disableCachingNullValues()
                 .enableTimeToIdle()
-                .serializeKeysWith(RedisSerializationContext.SerializationPair.fromSerializer(new StringRedisSerializer()))
-                .serializeValuesWith(RedisSerializationContext.SerializationPair.fromSerializer(RedisSerializer.json()));
+                .serializeKeysWith(
+                        RedisSerializationContext.SerializationPair.fromSerializer(new StringRedisSerializer()))
+                .serializeValuesWith(
+                        RedisSerializationContext.SerializationPair.fromSerializer(RedisSerializer.json()));
 
         return RedisCacheManager.builder(connectionFactory)
                 .cacheDefaults(config)

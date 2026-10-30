@@ -4,6 +4,8 @@ import com.edgesoft.chirp.dto.RegisterRequest;
 import com.edgesoft.chirp.dto.RegisterResponse;
 import com.edgesoft.chirp.dto.UserResponse;
 import com.edgesoft.chirp.entity.User;
+import com.edgesoft.chirp.proto.UserReply;
+import com.edgesoft.chirp.proto.UserRequest;
 import com.edgesoft.chirp.repository.UserRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.jspecify.annotations.Nullable;
@@ -25,7 +27,7 @@ public class UserService {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    @Cacheable(value="users-email", key="#email")
+    @Cacheable(value = "users-email", key = "#email")
     public @Nullable UserResponse getUserByEmail(String email) {
         String sanitizedEmail = email.strip().toLowerCase(Locale.ROOT);
         log.info("Getting the user by email: {}", sanitizedEmail);
@@ -34,17 +36,16 @@ public class UserService {
                     log.info("Found the user: {}", user.getFirstName());
                     return new UserResponse(user);
                 }).orElseThrow(
-                        () -> new NoSuchElementException("User not found with email: {}" + sanitizedEmail)
-                );
+                        () -> new NoSuchElementException("User not found with email: {}" + sanitizedEmail));
     }
 
     public RegisterResponse register(RegisterRequest registerRequest) {
         /*
-        1. field validations, SKIP for now
-        2. existing user,
-        3. encryption,
-        4. persistent storage
-        * */
+         * 1. field validations, SKIP for now
+         * 2. existing user,
+         * 3. encryption,
+         * 4. persistent storage
+         */
         User user = User.builder()
                 .userId(UUID.randomUUID())
                 .email(registerRequest.email())
@@ -56,19 +57,29 @@ public class UserService {
         log.info("Registered a new user {}", savedUser.getFirstName());
         return new RegisterResponse(savedUser);
 
-
     }
 
-    @Cacheable(value="users", key="#id")
+    @Cacheable(value = "users", key = "#id")
     public @Nullable UserResponse getUserById(UUID id) {
         log.info("Finding a user by id: {}", id);
         return userRepository.findById(id).map(
                 user -> {
                     log.info("User found with uuid: {}", id);
                     return new UserResponse(user);
-                }
-        ).orElseThrow(
-                () -> new NoSuchElementException("No user found with id " + id)
-        );
+                }).orElseThrow(
+                        () -> new NoSuchElementException("No user found with id " + id));
+    }
+
+    @Cacheable(value = "grpc-users", key = "#email")
+    public UserResponse getUser(String email) {
+        String sanitizedEmail = email.strip().toLowerCase(Locale.ROOT);
+        log.info("Getting the user by email: {}", sanitizedEmail);
+        return userRepository.findByEmail(sanitizedEmail)
+                .map(user -> {
+                    log.info("Found the user: {}", user.getFirstName());
+                    return new UserResponse(user);
+                }).orElseThrow(
+                        () -> new NoSuchElementException("User not found with email: {}" + sanitizedEmail));
+
     }
 }

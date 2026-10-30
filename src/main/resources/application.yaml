@@ -14,5 +14,5 @@ spring:
     name: chirp
 app:
   security:
-    api-key-header: X-API-KEY
+    api-key-header: x-api-key
     api-key: "your-super-secure-secret-api-key-here"

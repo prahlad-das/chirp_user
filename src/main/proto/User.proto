@@ -1,0 +1,43 @@
+syntax = "proto3";
+
+import "google/protobuf/timestamp.proto";
+
+option java_multiple_files = true;
+option java_package = "com.edgesoft.chirp.proto";
+option java_outer_classname = "UserServiceProto";
+
+service UserService {
+  rpc GetUser(UserRequest) returns (UserReply) {}
+}
+
+message UserRequest {
+  string id = 1;
+}
+
+message UserReply {
+  string userId = 1;
+  string firstName = 2;
+  string lastName = 3;
+  string bio = 4;
+  string location = 5;
+  google.protobuf.Timestamp createdAt = 6;
+  google.protobuf.Timestamp dob = 7;
+  int32 followers = 8;
+  int32 following = 9;
+  string email = 10;
+
+}
+
+
+//    private UUID userId;
+//
+//    private String firstName;
+//    private String lastName;
+//    private String bio;
+//    private String location;
+//    private Date createdAt;
+//    private Date date_of_birth;
+//    private int followers = 0;
+//    private int following = 0;
+//
+//    private String email;
