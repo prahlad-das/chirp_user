@@ -5,7 +5,6 @@ import com.edgesoft.chirp.proto.UserReply;
 import com.google.protobuf.Timestamp;
 
 import java.time.Instant;
-import java.util.Date;
 
 public class UserConvert {
 
@@ -32,14 +31,13 @@ public class UserConvert {
         return value != null ? value.toString() : "";
     }
 
-    private static Timestamp toTimestamp(Date date) {
+    private static Timestamp toTimestamp(Instant date) {
         if (date == null) {
             return Timestamp.getDefaultInstance();
         }
-        Instant instant = date.toInstant();
         return Timestamp.newBuilder()
-                .setSeconds(instant.getEpochSecond())
-                .setNanos(instant.getNano())
+                .setSeconds(date.getEpochSecond())
+                .setNanos(date.getNano())
                 .build();
     }
 }

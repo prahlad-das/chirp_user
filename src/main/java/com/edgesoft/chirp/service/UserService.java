@@ -12,6 +12,7 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.time.Instant;
 import java.util.Locale;
 import java.util.NoSuchElementException;
 import java.util.UUID;
@@ -40,15 +41,16 @@ public class UserService {
     public RegisterResponse register(RegisterRequest registerRequest) {
         /*
          * 1. field validations, SKIP for now
-         * 2. existing user,
-         * 3. encryption,
-         * 4. persistent storage
+         * 2. existing user, Throw Exception
+         * 3. encryption, BCrypt
+         * 4. persistent storage, Postgres
          */
         User user = User.builder()
                 .userId(UUID.randomUUID())
                 .email(registerRequest.email())
                 .password(passwordEncoder.encode(registerRequest.password()))
                 .firstName(registerRequest.firstName())
+                .createdAt(Instant.now())
                 .build();
 
         User savedUser = userRepository.saveAndFlush(user);

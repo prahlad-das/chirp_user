@@ -6,7 +6,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.Date;
+import java.time.Instant;
 import java.util.UUID;
 
 @Entity
@@ -32,8 +32,8 @@ public class User {
     private String lastName;
     private String bio;
     private String location;
-    private Date createdAt;
-    private Date date_of_birth;
+    private Instant createdAt;
+    private Instant date_of_birth;
     private int followers = 0;
     private int following = 0;
 
